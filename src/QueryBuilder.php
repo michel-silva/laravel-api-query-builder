@@ -57,6 +57,13 @@ class QueryBuilder
         $this->uriParser = new UriParser($request);
 
         $this->query = $this->model->newQuery();
+
+        //set tenant_id with tenant_id or 0 to get records 
+        $tenant = ! $request->only('tenant_id') ? $request->route()->tenant_id : $request->only('tenant_id');
+
+        if ($tenant) {
+            $this->query->whereIn('tenant_id', [$tenant, 0]);
+        }
     }
 
     public function build()
